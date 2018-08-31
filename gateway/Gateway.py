@@ -46,4 +46,4 @@ if __name__ == '__main__':
             trade['price'] = str(random.random())
             trade['size'] = str(random.randint(1, 10))
             print("client sending: " + str(trade))
-            gateway.write(trade)
+            gateway.write(trade) 

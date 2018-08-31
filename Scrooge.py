@@ -17,17 +17,26 @@ class Scrooge:
         self.sockets = [self.gateway.sock]
         self.market = {}
         self.order_id = 0
+        self.handshake = False
 
     def run(self):
         while True:
             ready_to_read, _, _ = select.select(self.sockets, [], [], TIMEOUT)
             if ready_to_read:
                 new_market_data = self.gateway.read()
-                # update self.market with new_market_data
+                self.parse_market_data(new_market_data)
 
             for algo in self.algos:
                 algo.update_market_data(self.market)
                 new_trades = algo.find_trades()
+
+    def parse_market_data(self, market_data):
+        type = market_data['type']
+        if type == 'hello':
+            self.handshake = True
+        elif type == 'update':
+            self.market = market_data['data']
+            print(self.market)
 
     def execute_single_trade(self, symbol, price, size):
         if size != 0:
@@ -49,3 +58,9 @@ class Scrooge:
         for symbol, price, size in trades:
             self.execute_single_trade(symbol, price, size)
 
+    def cancel_obselete_orders(self):
+        pass
+
+if __name__ == '__main__':
+    scrooge = Scrooge()
+    scrooge.run()
