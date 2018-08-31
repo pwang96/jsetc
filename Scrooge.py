@@ -6,6 +6,7 @@ from algo import ETFArbitrage
 HOST = 'localhost'
 PORT = 42069
 TIMEOUT = 0.1
+SIDES = ['buy', 'sell']
 
 
 class Scrooge:
@@ -28,21 +29,23 @@ class Scrooge:
                 algo.update_market_data(self.market)
                 new_trades = algo.find_trades()
 
-    def execute_single_trade(self, symbol, dir, price, size):
-        trade = {'type': 'add',
-                 'order_id': self.order_id,
-                 'symbol': symbol,
-                 'dir': dir,
-                 'price': price,
-                 'size': size}
+    def execute_single_trade(self, symbol, price, size):
+        if size != 0:
+            # if size is negative, it's a sell order
+            trade = {'type': 'add',
+                     'order_id': self.order_id,
+                     'symbol': symbol,
+                     'dir': SIDES[size < 0],
+                     'price': price,
+                     'size': abs(size)}
 
-        self.order_id += 1
-        # print(trade)
+            self.order_id += 1
+            # print(trade)
 
-        self.gateway.write(trade)
+            self.gateway.write(trade)
 
     def execute_trades(self, trades):
-        # trades is a tuple of (symbol, dir, price, size)
-        for symbol, dir, price, size in trades:
-            self.execute_single_trade(symbol, dir, price, size)
+        # trades is a tuple of (symbol, price, size)
+        for symbol, price, size in trades:
+            self.execute_single_trade(symbol, price, size)
 

@@ -1,4 +1,6 @@
-import socket, json, queue, select
+import socket, json, random, select
+
+PACKET_SIZE = 1024
 
 
 class Gateway:
@@ -15,7 +17,7 @@ class Gateway:
         self.sock.send((formatted_data + '\n').encode('utf-8'))
 
     def read(self):
-        data = self.sock.recv(64)  # recv is blocking
+        data = self.sock.recv(PACKET_SIZE)  # recv is blocking
         if data:
             return json.loads(data)
 
@@ -30,4 +32,18 @@ class Gateway:
 if __name__ == '__main__':
     gateway = Gateway()
     gateway.connect('localhost', 42069)
-    gateway.listen()
+    # gateway.listen()
+    order_id = 0
+    trade = {'type': 'add',
+             'order_id': order_id,
+             'symbol': 'AAPL',
+             'dir': 'buy',
+             'price': "0",
+             'size': "0"}
+    while True:
+        print("client read: " + str(gateway.read()))
+        if random.random() < 0.5:
+            trade['price'] = str(random.random())
+            trade['size'] = str(random.randint(1, 10))
+            print("client sending: " + str(trade))
+            gateway.write(trade)
