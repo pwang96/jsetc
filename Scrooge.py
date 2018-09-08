@@ -38,7 +38,7 @@ class Scrooge:
 
             if counter % 50 == 0:
                 for algo in self.algos:
-                    algo.update_market_data(self.market)
+                    algo.update_market_data(self.market, self.portfolio)
                     new_trades = algo.find_trades()
                     for symbol, price, size in new_trades:
                         if -100 <= self.portfolio[symbol] + size <= 100:
