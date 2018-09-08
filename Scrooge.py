@@ -25,10 +25,10 @@ class Scrooge:
             ready_to_read, _, _ = select.select(self.sockets, [], [], TIMEOUT)
             if ready_to_read:
                 new_market_data = self.gateway.read()
-
-                self.parse_market_data(new_market_data)
-                print(counter, new_market_data)
-                counter += 1
+                for md in new_market_data:
+                    self.parse_market_data(md)
+                    print(counter, md)
+                    counter += 1
 
             # for algo in self.algos:
             #     algo.update_market_data(self.market)
