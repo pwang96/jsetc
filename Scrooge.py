@@ -75,11 +75,11 @@ class Scrooge:
         elif type == 'ack':
             print('ack')
         elif type == 'reject':
-            print('reject')
+            print('order number {} rejected because of {}'.format(str(market_data['order_id']), market_data['error']))
         elif type == 'fill':
-            print('fill')
+            print('order number {} filled'.format(str(market_data['order_id'])))
         elif type == 'out':
-            print('out')
+            print('order number {} out'.format(str(market_data['order_id'])))
 
     def execute_single_trade(self, symbol, price, size):
         if size != 0 and -100 <= self.portfolio[symbol] + size <= 100:
@@ -91,11 +91,12 @@ class Scrooge:
                      'price': price,
                      'size': abs(size)}
 
-            self.order_id += 1
+
             self.portfolio[symbol] += size
             self.portfolio['USD'] -= size * price
 
-            print("executed trade: ", trade)
+            print("executed trade number {}: {}".format(str(self.order_id), str(trade)))
+            self.order_id += 1
             self.gateway.write(trade)
 
     def execute_convert(self, symbol, dir, size):
@@ -105,9 +106,8 @@ class Scrooge:
                  "dir": dir,
                  "size": size}
 
+        print("executed conversion number {}: {}".format(str(self.order_id), str(trade)))
         self.order_id += 1
-        print("executed conversion: ", trade)
-
         self.gateway.write(trade)
 
     def execute_trades(self, trades):
