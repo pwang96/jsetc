@@ -4,11 +4,15 @@ class Security:
         self.type = type
         self.members = members
 
+        self.buys = []
+        self.sells = []
         self.history = []
         self.last_update = None
 
-    def update(self, marketdataupdate):
-        self.history.append(marketdataupdate)
+    def update(self, buys, sells):
+        self.buys = buys
+        self.sells = sells
+        self.history.append((buys[0] + sells[0])/2)  # record the midprice
 
     def get_bid(self):
         if self.history:
