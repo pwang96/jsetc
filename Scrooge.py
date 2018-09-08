@@ -21,7 +21,8 @@ class Scrooge:
         self.market = {}
         self.order_id = 0
         self.securities = [Security(sec, mem) for sec, mem in zip(SECURITIES, SEC_MEMBERS)]
-        self.algos = [ETFArbitrage.ETFArbitrage(self.securities), Bond.Bond(self.securities)]
+        self.algos = [ETFArbitrage.ETFArbitrage(self.securities, self.portfolio),
+                      Bond.Bond(self.securities, self.portfolio)]
         self.security_map = {sec.symbol: sec for sec in self.securities}
 
     def run(self):
@@ -92,6 +93,16 @@ class Scrooge:
             # print(trade)
 
             self.gateway.write(trade)
+
+    def execute_convert(self, symbol, dir, size):
+        trade = {"type": "convert",
+                 "order_id": self.order_id,
+                 "symbol": symbol,
+                 "dir": dir,
+                 "size": size}
+
+        self.gateway.write(trade)
+
 
     def execute_trades(self, trades):
         # trades is a list of tuples of (symbol, price, size)
