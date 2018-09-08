@@ -27,3 +27,4 @@ class Security:
             last_update = self.history[-1]
             return (last_update.bid + last_update.ask) / 2
         return 0
+        
