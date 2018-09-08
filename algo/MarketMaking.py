@@ -23,4 +23,4 @@ class MarketMaking(Algo):
                     trades.append((security, curr_spread[0] - 1, 20))
                     trades.append((security, curr_spread[1] - 1, -20))
 
-        return []
+        return trades
