@@ -1,24 +1,28 @@
 import select
 from gateway.Gateway import Gateway
 from algo import ETFArbitrage, Bond
+from utils.Security import Security
 
 # constants
 HOST = 'test-exch-mobrien'
-PORT = 25001
+# HOST = 'production'
+PORT = 25000
 TIMEOUT = 0.1
 SIDES = ['BUY', 'SELL']
-
+SECURITIES = ['BOND', 'MSFT', 'AAPL', 'GOOG', 'XLK', 'BABA', 'BABZ']
+SEC_MEMBERS = [[], [], [], [], [], ['BOND', 'AAPL', 'MSFT', 'GOOG'], [], []]
 
 class Scrooge:
     def __init__(self):
         self.gateway = Gateway()
         self.portfolio = dict()
         self.gateway.connect(HOST, PORT)
-        self.algos = [ETFArbitrage.ETFArbitrage(None), Bond.Bond(None)]
         self.sockets = [self.gateway.sock]
         self.market = {}
         self.order_id = 0
-        self.handshake = False
+        self.securities = [Security(sec, mem) for sec, mem in zip(SECURITIES, SEC_MEMBERS)]
+        self.algos = [ETFArbitrage.ETFArbitrage(self.securities), Bond.Bond(self.securities)]
+        self.security_map = {sec.symbol: sec for sec in self.securities}
 
     def run(self):
         counter = -1
@@ -62,6 +66,7 @@ class Scrooge:
             symbol = market_data['symbol']
             buys = market_data['buy']
             sells = market_data['sell']
+            self.security_map[symbol].update(buys, sells)
         elif type == 'trade':
             print('trade')
         elif type == 'ack':

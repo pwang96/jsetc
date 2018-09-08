@@ -1,7 +1,6 @@
 class Security:
-    def __init__(self, symbol, type, members):
+    def __init__(self, symbol, members):
         self.symbol = symbol
-        self.type = type
         self.members = members
 
         self.buys = []
@@ -14,16 +13,14 @@ class Security:
         self.sells = sells
         self.history.append((buys[0] + sells[0])/2)  # record the midprice
 
-    def get_bid(self):
-        if self.history:
-            last_update = self.history[-1]
-            return last_update.bid
+    def get_buy(self):
+        if self.buys:
+            return self.buys[0]
         return 0
 
-    def get_ask(self):
-        if self.history:
-            last_update = self.history[-1]
-            return last_update.ask
+    def get_sell(self):
+        if self.sells:
+            return self.sells[0]
         return float('inf')
 
     def get_midprice(self):
