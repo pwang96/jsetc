@@ -1,5 +1,5 @@
 from algo.Algo import Algo
-
+import numpy as np
 
 class MarketMaking(Algo):
     """
@@ -17,13 +17,19 @@ class MarketMaking(Algo):
             # if -50 <= self.positions[security] <= 50:
             #     trades.append((security, curr_spread[0] + 1, 20))
             #     trades.append((security, curr_spread[1] - 1, -20))
-            if avg30tick + 1 * stddev < avg:
-                if -50 <= self.positions[security] <= 50:
-                    trades.append((security, curr_spread[0] + 1, 20))
-                    trades.append((security, curr_spread[1] + 2, -20))
-            elif avg30tick - 1 * stddev > avg:
-                if -50 <= self.positions[security] <= 50:
-                    trades.append((security, curr_spread[0] - 2, 20))
-                    trades.append((security, curr_spread[1] - 1, -20))
+
+
+            # if avg30tick + 1 * stddev < avg:
+            #     if -50 <= self.positions[security] <= 50:
+            #         trades.append((security, curr_spread[0] + 1, 20))
+            #         trades.append((security, curr_spread[1] + 2, -20))
+            # elif avg30tick - 1 * stddev > avg:
+            #     if -50 <= self.positions[security] <= 50:
+            #         trades.append((security, curr_spread[0] - 2, 20))
+            #         trades.append((security, curr_spread[1] - 1, -20))
+
+            m, _ = np.polyfit(list(range(len(self.securities[security].history[-10:]))),
+                              self.securities[security].history[-10:], 1)
+            print("SLOPE: {}".format(m))
 
         return trades
