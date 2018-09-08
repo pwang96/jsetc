@@ -26,12 +26,15 @@ class Scrooge:
                       Bond.Bond(self.security_map, self.portfolio),
                       MarketMaking.MarketMaking(self.security_map, self.portfolio)]
 
+        self.num_updates = 0
+
     def run(self):
         counter = -1
         while True:
             ready_to_read, _, _ = select.select(self.sockets, [], [], TIMEOUT)
             if ready_to_read:
                 counter += 1
+                self.num_updates += 1
                 new_market_data = self.gateway.read()
                 for md in new_market_data:
                     self.parse_market_data(md)
@@ -46,11 +49,6 @@ class Scrooge:
                                 if size > 0:
                                     continue
                             self.execute_single_trade(symbol, price, size)
-                            self.portfolio[symbol] += size
-                            print(self.portfolio['USD'])
-                            print(type(size * price))
-                            self.portfolio['USD'] -= size * price
-
 
     def parse_market_data(self, market_data):
         type = market_data['type']
@@ -93,6 +91,8 @@ class Scrooge:
                      'size': abs(size)}
 
             self.order_id += 1
+            self.portfolio[symbol] += size
+            self.portfolio['USD'] -= size * price
 
             print("executed trade: ", trade)
             self.gateway.write(trade)
@@ -105,7 +105,7 @@ class Scrooge:
                  "size": size}
 
         self.order_id += 1
-        print("executed trade: ", trade)
+        print("executed conversion: ", trade)
 
         self.gateway.write(trade)
 
