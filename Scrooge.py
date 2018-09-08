@@ -31,13 +31,18 @@ class Scrooge:
                     print(md)
                     self.parse_market_data(md)
 
-            # bond penny pinching
             if counter % 50 == 0:
                 for algo in self.algos:
                     algo.update_market_data(self.market)
                     new_trades = algo.find_trades()
-                    self.execute_trades(new_trades)
-
+                    for symbol, price, size in new_trades:
+                        if -100 <= self.portfolio[symbol] + size <= 100:
+                            if self.portfolio['USD'] < -15000:
+                                if size > 0:
+                                    continue
+                            self.execute_single_trade(symbol, price, size)
+                            self.portfolio[symbol] += size
+                            self.portfolio['USD'] -= size * price
 
     def parse_market_data(self, market_data):
         type = market_data['type']
