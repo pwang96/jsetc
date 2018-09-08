@@ -2,6 +2,8 @@ import select
 from gateway.Gateway import Gateway
 from algo import ETFArbitrage, Bond, MarketMaking, ADR
 from utils.Security import Security
+import collections
+
 
 # constants
 HOST = 'test-exch-mobrien'
@@ -23,13 +25,15 @@ class Scrooge:
         self.securities = [Security(sec, mem) for sec, mem in zip(SECURITIES, SEC_MEMBERS)]
         self.security_map = {sec.symbol: sec for sec in self.securities}
         self.algos = [Bond.Bond(self.security_map, self.portfolio),
-                      MarketMaking.MarketMaking(self.security_map, self.portfolio),
                       ADR.ADR(self.security_map, self.portfolio)]
         self.etf_arb = ETFArbitrage.ETFArbitrage(self.security_map, self.portfolio)
+
         self.num_updates = 0
         self.all_trades = {}
         self.filled_orders = {}
         self.orderid_to_trade_map = {}
+        self.bidask = collections.defaultdict(lambda: [0, float('inf')])
+        self.mm = MarketMaking.MarketMaking(self.security_map, self.portfolio, self.bidask)
 
     def run(self):
         counter = -1
