@@ -33,7 +33,6 @@ class Scrooge:
                 counter += 1
                 new_market_data = self.gateway.read()
                 for md in new_market_data:
-                    print(md)
                     self.parse_market_data(md)
 
             if counter % 50 == 0:
@@ -90,8 +89,8 @@ class Scrooge:
                      'size': abs(size)}
 
             self.order_id += 1
-            # print(trade)
 
+            print("executed trade: ", trade)
             self.gateway.write(trade)
 
     def execute_convert(self, symbol, dir, size):
@@ -101,8 +100,10 @@ class Scrooge:
                  "dir": dir,
                  "size": size}
 
-        self.gateway.write(trade)
+        self.order_id += 1
+        print("executed trade: ", trade)
 
+        self.gateway.write(trade)
 
     def execute_trades(self, trades):
         # trades is a list of tuples of (symbol, price, size)
