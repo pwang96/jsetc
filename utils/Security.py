@@ -11,8 +11,11 @@ class Security:
     def update(self, buys, sells):
         self.buys = buys
         self.sells = sells
-        self.history.append((buys[0][0] + sells[0][0]) /2)  # record the midprice
-
+        try:
+            self.history.append((buys[0][0] + sells[0][0]) / 2)  # record the midprice
+        except Exception:
+            print(buys)
+            print(sells)
     def get_buy(self):
         if self.buys:
             return self.buys[0][0]  # only price, no size
