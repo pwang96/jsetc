@@ -20,15 +20,13 @@ class Scrooge:
         self.handshake = False
 
     def run(self):
-        counter = 1
         while True:
             ready_to_read, _, _ = select.select(self.sockets, [], [], TIMEOUT)
             if ready_to_read:
                 new_market_data = self.gateway.read()
                 for md in new_market_data:
+                    print(md)
                     self.parse_market_data(md)
-                    print(counter, md)
-                    counter += 1
 
             # for algo in self.algos:
             #     algo.update_market_data(self.market)
@@ -37,7 +35,7 @@ class Scrooge:
     def parse_market_data(self, market_data):
         type = market_data['type']
         if type == 'hello':
-            self.handshake = True
+            print('hello')
         elif type == 'open':
             print('open')
         elif type == 'close':
