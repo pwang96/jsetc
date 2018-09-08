@@ -20,10 +20,10 @@ class MarketMaking(Algo):
             if avg30tick + 2 * stddev < avg:
                 if -50 <= self.positions[security] <= 50:
                     trades.append((security, curr_spread[0] + 1, 20))
-                    trades.append((security, curr_spread[1] + 1, -20))
+                    trades.append((security, curr_spread[1] + 2, -20))
             elif avg30tick - 2 * stddev > avg:
                 if -50 <= self.positions[security] <= 50:
-                    trades.append((security, curr_spread[0] - 1, 20))
+                    trades.append((security, curr_spread[0] - 2, 20))
                     trades.append((security, curr_spread[1] - 1, -20))
 
-        return []
+        return trades

@@ -28,6 +28,8 @@ class Scrooge:
         self.etf_arb = ETFArbitrage.ETFArbitrage(self.security_map, self.portfolio)
         self.num_updates = 0
         self.all_trades = {}
+        self.filled_orders = {}
+        self.orderid_to_trade_map = {}
 
     def run(self):
         counter = -1
@@ -87,6 +89,9 @@ class Scrooge:
         elif type == 'reject':
             print('order number {} rejected because of {}'.format(str(market_data['order_id']), market_data['error']))
         elif type == 'fill':
+            orderid = market_data['order_id']
+            symbol = self.orderid_to_trade_map[orderid]['symbol']
+            self.filled_orders[symbol] = self.orderid_to_trade_map[orderid]['price']
             if market_data['order_id'] in self.all_trades:
                 del self.all_trades[market_data['order_id']]
             print('order number {} filled'.format(str(market_data['order_id'])))
@@ -109,6 +114,7 @@ class Scrooge:
 
             self.portfolio['USD'] -= size * price
             self.all_trades[num_updates] = trade
+            self.orderid_to_trade_map[self.order_id] = trade
             print("executed trade number {}: {}".format(str(self.order_id), str(trade)))
             self.order_id += 1
             self.gateway.write(trade)
