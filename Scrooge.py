@@ -21,9 +21,9 @@ class Scrooge:
         self.market = {}
         self.order_id = 0
         self.securities = [Security(sec, mem) for sec, mem in zip(SECURITIES, SEC_MEMBERS)]
-        self.algos = [ETFArbitrage.ETFArbitrage(self.securities, self.portfolio),
-                      Bond.Bond(self.securities, self.portfolio)]
         self.security_map = {sec.symbol: sec for sec in self.securities}
+        self.algos = [ETFArbitrage.ETFArbitrage(self.security_map, self.portfolio),
+                      Bond.Bond(self.security_map, self.portfolio)]
 
     def run(self):
         counter = -1
@@ -38,7 +38,7 @@ class Scrooge:
 
             if counter % 50 == 0:
                 for algo in self.algos:
-                    algo.update_market_data(self.market, self.portfolio)
+                    algo.update_market_data(self.security_map, self.portfolio)
                     new_trades = algo.find_trades()
                     for symbol, price, size in new_trades:
                         if -100 <= self.portfolio[symbol] + size <= 100:
