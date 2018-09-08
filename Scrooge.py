@@ -47,6 +47,7 @@ class Scrooge:
 
             if counter % 50 == 0:
                 self.cancel_obselete_orders(self.num_updates)
+                self.etf_arb.update_market_data(self.security_map, self.portfolio)
                 conversions, trades = self.etf_arb.find_trades()
                 for symbol, dir, size in conversions:
                     self.execute_convert(symbol, dir, size)

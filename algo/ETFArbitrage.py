@@ -13,6 +13,7 @@ class ETFArbitrage(Algo):
     2 GOOG
     """
     def find_trades(self):
+        print(self.positions)
         conversions = []
         trades = []
         CONVERSION_FEE = 100
