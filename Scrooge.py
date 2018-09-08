@@ -47,9 +47,10 @@ class Scrooge:
                                     continue
                             self.execute_single_trade(symbol, price, size)
                             self.portfolio[symbol] += size
-                            self.portfolio['USD'] -= size * price
                             print(self.portfolio['USD'])
                             print(type(size * price))
+                            self.portfolio['USD'] -= size * price
+
 
     def parse_market_data(self, market_data):
         type = market_data['type']
