@@ -11,7 +11,7 @@ class Gateway:
         self.sock.connect((host, port))
         print('connected!')
         self.write({'type': 'hello', 'team': 'MOBRIEN'})
-        data = self.sock.recv(PACKET_SIZE)
+        data = self.sock.recv(PACKET_SIZE).decode('utf-8')
         print(data)
         print(type(data))
         print(json.loads(data))
