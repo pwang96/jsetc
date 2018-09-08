@@ -13,6 +13,7 @@ class ETFArbitrage(Algo):
     2 GOOG
     """
     def find_trades(self):
+        conversions = []
         trades = []
         CONVERSION_FEE = 100
         # only pass in XLF security
@@ -38,11 +39,12 @@ class ETFArbitrage(Algo):
                 self.positions['AAPL'] >= 2 and \
                 self.positions['MSFT'] >= 3 and \
                 self.positions['GOOG'] >= 2:
-                trades.append(('XLK', 'BUY', 10))
+                conversions.append(('XLK', 'BUY', 10))
+                trades.append(('XLK', xlf_sell, -10))
 
         elif component_sells > xlf_ask + CONVERSION_FEE:
             if self.positions['XLK'] >= 10:
-                trades.append(('XLK', 'SELL', 10))
+                conversions.append(('XLK', 'SELL', 10))
+                trades.append(('XLK', xlf_sell, -10))
 
-
-        return trades
+        return conversions, trades
