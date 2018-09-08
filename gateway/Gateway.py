@@ -10,7 +10,7 @@ class Gateway:
     def connect(self, host, port):
         self.sock.connect((host, port))
         print('connected!')
-        self.write({'type': 'hello', 'team': 'peter'})
+        self.write({'type': 'hello', 'team': 'MOBRIEN'})
 
     def write(self, data):
         formatted_data = json.dumps(data)
@@ -46,4 +46,4 @@ if __name__ == '__main__':
             trade['price'] = str(random.random())
             trade['size'] = str(random.randint(1, 10))
             print("client sending: " + str(trade))
-            gateway.write(trade) 
+            gateway.write(trade)

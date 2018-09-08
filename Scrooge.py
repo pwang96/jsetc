@@ -3,8 +3,8 @@ from gateway.Gateway import Gateway
 from algo import ETFArbitrage
 
 # constants
-HOST = 'localhost'
-PORT = 42069
+HOST = 'test-exch-mobrien'
+PORT = 25001
 TIMEOUT = 0.1
 SIDES = ['buy', 'sell']
 
@@ -25,10 +25,11 @@ class Scrooge:
             if ready_to_read:
                 new_market_data = self.gateway.read()
                 self.parse_market_data(new_market_data)
+                print(new_market_data)
 
-            for algo in self.algos:
-                algo.update_market_data(self.market)
-                new_trades = algo.find_trades()
+            # for algo in self.algos:
+            #     algo.update_market_data(self.market)
+            #     new_trades = algo.find_trades()
 
     def parse_market_data(self, market_data):
         type = market_data['type']
