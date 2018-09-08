@@ -1,6 +1,6 @@
 import select
 from gateway.Gateway import Gateway
-from algo import ETFArbitrage, Bond
+from algo import ETFArbitrage, Bond, MarketMaking
 from utils.Security import Security
 
 # constants
@@ -23,7 +23,8 @@ class Scrooge:
         self.securities = [Security(sec, mem) for sec, mem in zip(SECURITIES, SEC_MEMBERS)]
         self.security_map = {sec.symbol: sec for sec in self.securities}
         self.algos = [ETFArbitrage.ETFArbitrage(self.security_map, self.portfolio),
-                      Bond.Bond(self.security_map, self.portfolio)]
+                      Bond.Bond(self.security_map, self.portfolio),
+                      MarketMaking.MarketMaking(self.security_map, self.portfolio)]
 
     def run(self):
         counter = -1
