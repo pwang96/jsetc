@@ -79,7 +79,7 @@ class Scrooge:
             print('out')
 
     def execute_single_trade(self, symbol, price, size):
-        if size != 0:
+        if size != 0 and -100 <= self.portfolio[symbol] + size <= 100:
             # if size is negative, it's a sell order
             trade = {'type': 'add',
                      'order_id': self.order_id,

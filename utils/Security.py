@@ -1,3 +1,6 @@
+import statistics
+
+
 class Security:
     def __init__(self, symbol, members):
         self.symbol = symbol
@@ -16,6 +19,13 @@ class Security:
         except Exception:
             print(buys)
             print(sells)
+
+    def average(self):
+        return sum(self.history) / len(self.history)
+
+    def stddev(self):
+        return statistics.stdev(self.history)
+
     def get_buy(self):
         if self.buys:
             return self.buys[0][0]  # only price, no size
