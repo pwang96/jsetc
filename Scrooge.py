@@ -56,7 +56,7 @@ class Scrooge:
                 for symbol, dir, size in conversions:
                     self.execute_convert(symbol, dir, size)
                 for symbol, price, size in trades:
-                    self.execute_single_trade(symbol, price, size)
+                    self.execute_single_trade(symbol, price, size, self.num_updates)
                 for algo in self.algos:
                     algo.update_market_data(self.security_map, self.portfolio)
                     new_trades = algo.find_trades()

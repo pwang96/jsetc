@@ -19,33 +19,38 @@ class ETFArbitrage(Algo):
         CONVERSION_FEE = 100
         # only pass in XLF security
         xlf = self.securities['XLK']
-        xlf_ask = xlf.get_buy()
-        xlf_sell = xlf.get_sell()
+        xlf_bid = xlf.get_buy()
+        xlf_ask = xlf.get_sell()
 
         # IF ETF IS UNDERPRICED, BUY ETF, SELL COMPONENTS
-        bond_asks = 3 * self.securities['BOND'].get_buy()
-        aapl_asks = 2 * self.securities['AAPL'].get_buy()
-        msft_asks = 3 * self.securities['MSFT'].get_buy()
-        goog_asks = 2 * self.securities['GOOG'].get_buy()
+        bond_bids = 3 * self.securities['BOND'].get_buy()
+        aapl_bids = 2 * self.securities['AAPL'].get_buy()
+        msft_bids = 3 * self.securities['MSFT'].get_buy()
+        goog_bids = 2 * self.securities['GOOG'].get_buy()
+        component_bids = bond_bids + aapl_bids + msft_bids + goog_bids
+
+        bond_asks = 3 * self.securities['BOND'].get_sell()
+        aapl_asks = 2 * self.securities['AAPL'].get_sell()
+        msft_asks = 3 * self.securities['MSFT'].get_sell()
+        goog_asks = 2 * self.securities['GOOG'].get_sell()
         component_asks = bond_asks + aapl_asks + msft_asks + goog_asks
 
-        bond_sells = 3 * self.securities['BOND'].get_sell()
-        aapl_sells = 2 * self.securities['AAPL'].get_sell()
-        msft_sells = 3 * self.securities['MSFT'].get_sell()
-        goog_sells = 2 * self.securities['GOOG'].get_sell()
-        component_sells = bond_sells + aapl_sells + msft_sells + goog_sells
 
-        if xlf_sell > component_asks + CONVERSION_FEE:
-            if self.positions['BOND'] >= 3 and \
-                self.positions['AAPL'] >= 2 and \
-                self.positions['MSFT'] >= 3 and \
-                self.positions['GOOG'] >= 2:
-                conversions.append(('XLK', 'BUY', 10))
-                trades.append(('XLK', xlf_sell, -10))
+        for multiple in range(1, 6):
+            if component_asks + CONVERSION_FEE//multiple < xlf_bid:
+                if self.positions['BOND'] >= 3*multiple and \
+                    self.positions['AAPL'] >= 2*multiple and \
+                    self.positions['MSFT'] >= 3*multiple and \
+                    self.positions['GOOG'] >= 2*multiple:
+                    conversions.append(('XLK', 'BUY', 10*multiple))
+                    trades.append(('XLK', xlf_bid, -10*multiple))
 
-        elif component_sells > xlf_ask + CONVERSION_FEE:
-            if self.positions['XLK'] >= 10:
-                conversions.append(('XLK', 'SELL', 10))
-                trades.append(('XLK', xlf_sell, -10))
+            elif xlf_ask + CONVERSION_FEE//multiple < component_bids:
+                if self.positions['XLK'] >= 10*multiple:
+                    conversions.append(('XLK', 'SELL', 10*multiple))
+                    trades.append(('BOND', bond_bids, -3*multiple))
+                    trades.append(('AAPL', aapl_bids, -2*multiple))
+                    trades.append(('MSFT', msft_bids, -3*multiple))
+                    trades.append(('GOOG', goog_bids, -2*multiple))
 
         return conversions, trades
