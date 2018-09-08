@@ -10,7 +10,7 @@ PORT = 25000
 TIMEOUT = 0.1
 SIDES = ['BUY', 'SELL']
 SECURITIES = ['BOND', 'MSFT', 'AAPL', 'GOOG', 'XLK', 'BABA', 'BABZ']
-SEC_MEMBERS = [[], [], [], [], [], ['BOND', 'AAPL', 'MSFT', 'GOOG'], [], []]
+SEC_MEMBERS = [[], [], [], [], ['BOND', 'AAPL', 'MSFT', 'GOOG'], [], []]
 
 class Scrooge:
     def __init__(self):
