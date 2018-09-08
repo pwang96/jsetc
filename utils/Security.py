@@ -24,7 +24,11 @@ class Security:
         return sum(self.history) / len(self.history)
 
     def stddev(self):
-        return statistics.stdev(self.history)
+        if len(self.history) > 1:
+            return statistics.stdev(self.history)
+        elif self.history:
+            return self.history[0]
+        return 0
 
     def get_buy(self):
         if self.buys:
