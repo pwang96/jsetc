@@ -28,6 +28,7 @@ class Scrooge:
                       ADR.ADR(self.security_map, self.portfolio)]
 
         self.num_updates = 0
+        self.all_trades = {}
 
     def run(self):
         counter = -1
@@ -49,7 +50,7 @@ class Scrooge:
                             if self.portfolio['USD'] < -15000:
                                 if size > 0:
                                     continue
-                            self.execute_single_trade(symbol, price, size)
+                            self.execute_single_trade(symbol, price, size, self.num_updates)
 
     def parse_market_data(self, market_data):
         type = market_data['type']
@@ -77,11 +78,15 @@ class Scrooge:
         elif type == 'reject':
             print('order number {} rejected because of {}'.format(str(market_data['order_id']), market_data['error']))
         elif type == 'fill':
+            if market_data['order_id'] in self.all_trades:
+                del self.all_trades[market_data['order_id']]
             print('order number {} filled'.format(str(market_data['order_id'])))
         elif type == 'out':
+            if market_data['order_id'] in self.all_trades:
+                del self.all_trades[market_data['order_id']]
             print('order number {} out'.format(str(market_data['order_id'])))
 
-    def execute_single_trade(self, symbol, price, size):
+    def execute_single_trade(self, symbol, price, size, num_updates):
         if size != 0 and -100 <= self.portfolio[symbol] + size <= 100:
             # if size is negative, it's a sell order
             trade = {'type': 'add',
@@ -91,10 +96,9 @@ class Scrooge:
                      'price': price,
                      'size': abs(size)}
 
-
             self.portfolio[symbol] += size
             self.portfolio['USD'] -= size * price
-
+            self.all_trades[num_updates] = trade
             print("executed trade number {}: {}".format(str(self.order_id), str(trade)))
             self.order_id += 1
             self.gateway.write(trade)
@@ -115,8 +119,12 @@ class Scrooge:
         for symbol, price, size in trades:
             self.execute_single_trade(symbol, price, size)
 
-    def cancel_obselete_orders(self):
-        pass
+    def cancel_obselete_orders(self, current_num_updates):
+        for update_num in self.all_trades:
+            if current_num_updates - update_num > 10:
+                print("canceling order number {}".format(self.all_trades[update_num]['order_id']))
+                trade = {"type": "cancel", "order_id": self.all_trades[update_num]['order_id']}
+                self.gateway.write(trade)
 
 if __name__ == '__main__':
     scrooge = Scrooge()
