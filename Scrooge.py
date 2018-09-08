@@ -38,9 +38,24 @@ class Scrooge:
         type = market_data['type']
         if type == 'hello':
             self.handshake = True
-        elif type == 'update':
-            self.market = market_data['data']
-            print(self.market)
+        elif type == 'open':
+            print('open')
+        elif type == 'close':
+            print('close')
+        elif type == 'error':
+            print('error')
+        elif type == 'book':
+            print('book')
+        elif type == 'trade':
+            print('trade')
+        elif type == 'ack':
+            print('ack')
+        elif type == 'reject':
+            print('reject')
+        elif type == 'fill':
+            print('fill')
+        elif type == 'out':
+            print('out')
 
     def execute_single_trade(self, symbol, price, size):
         if size != 0:
