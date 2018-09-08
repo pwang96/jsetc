@@ -1,11 +1,11 @@
-from Algo import Algo
+from algo.Algo import Algo
 
 
 class ETFArbitrage(Algo):
     """
     This algo will check if any ETFs are cheaper/more expensive than the constituent parts
-    if ask price of ETF > sum of bid prices of parts
-    if bid price of ETF > sum of ask prices of parts
+    if ask price of ETF > sum of bid prices of parts + conversion ratio
+    if bid price of ETF > sum of ask prices of parts + conversion ratio
     """
     def __init__(self, market_data):
         self.market_data = market_data
