@@ -15,12 +15,12 @@ class Security:
 
     def get_buy(self):
         if self.buys:
-            return self.buys[0]
+            return self.buys[0][0]  # only price, no size
         return 0
 
     def get_sell(self):
         if self.sells:
-            return self.sells[0]
+            return self.sells[0][0] # only price, no size
         return float('inf')
 
     def get_midprice(self):
