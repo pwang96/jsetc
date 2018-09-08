@@ -1,5 +1,5 @@
 from algo.Algo import Algo
-import numpy as np
+from scipy.stats import linregress
 
 class MarketMaking(Algo):
     """
@@ -27,9 +27,8 @@ class MarketMaking(Algo):
             #     if -50 <= self.positions[security] <= 50:
             #         trades.append((security, curr_spread[0] - 2, 20))
             #         trades.append((security, curr_spread[1] - 1, -20))
-
-            m, _ = np.polyfit(list(range(len(self.securities[security].history[-10:]))),
-                              self.securities[security].history[-10:], 1)
-            print("SLOPE: {}".format(m))
+            last10 = self.securities[security].history[-10:]
+            m = linregress(list(range(len(last10))), last10)
+            print("REGRESSION: {}".format(m))
 
         return trades
