@@ -6,7 +6,7 @@ from algo import ETFArbitrage, Bond
 HOST = 'test-exch-mobrien'
 PORT = 25001
 TIMEOUT = 0.1
-SIDES = ['buy', 'sell']
+SIDES = ['BUY', 'SELL']
 
 
 class Scrooge:
