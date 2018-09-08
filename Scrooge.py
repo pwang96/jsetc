@@ -42,6 +42,7 @@ class Scrooge:
                     self.parse_market_data(md)
 
             if counter % 50 == 0:
+                self.cancel_obselete_orders(self.num_updates)
                 for algo in self.algos:
                     algo.update_market_data(self.security_map, self.portfolio)
                     new_trades = algo.find_trades()
