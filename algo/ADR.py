@@ -12,11 +12,13 @@ class ADR(Algo):
         ADRlowestSell = securities['BABA'].get_sell()
         ADRhighestBuy = securities['BABA'].get_buy()
 
-        trades = []
+        # trades = []
 
-        if(highestBuy > ADRhighestBuy and lowestSell < ADRlowestSell):
-            trades = [('BABA', highestBuy + 1, min(100, 100 - self.positions['BABA'])),
-                      ('BABA', lowestSell - 1, max(100, 100 + self.positions['BABA']))]
+        trades = [('BABA', highestBuy + 1, min(100, 100 - self.positions['BABA'])),
+                  ('BABA', lowestSell - 1, max(100, 100 + self.positions['BABA']))]
+        # if(highestBuy > ADRhighestBuy and lowestSell < ADRlowestSell):
+        #     trades = [('BABA', highestBuy + 1, min(100, 100 - self.positions['BABA'])),
+        #               ('BABA', lowestSell - 1, max(100, 100 + self.positions['BABA']))]
 
         # midBABA = securities['BABA'].get_midprice()
         # midBABZ = securities['BABZ'].get_midprice()

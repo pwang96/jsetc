@@ -55,8 +55,8 @@ class Scrooge:
                                 if size > 0:
                                     continue
 
-                            print('type of price, ', type(price))
-                            print('type of size, ', type(size))
+                            # print('type of price, ', type(price))
+                            # print('type of size, ', type(size))
                             self.execute_single_trade(symbol, price, size, self.num_updates)
 
     def parse_market_data(self, market_data):
