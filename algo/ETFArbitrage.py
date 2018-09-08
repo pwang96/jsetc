@@ -6,7 +6,7 @@ class ETFArbitrage(Algo):
     This algo will check if any ETFs are cheaper/more expensive than the constituent parts
     if ask price of ETF > sum of bid prices of parts + conversion ratio
     if bid price of ETF > sum of ask prices of parts + conversion ratio
-    XLF
+    XLK
     3 BOND
     2 AAPL
     3 MSFT
@@ -16,7 +16,7 @@ class ETFArbitrage(Algo):
         trades = []
         CONVERSION_FEE = 100
         # only pass in XLF security
-        xlf = self.securities['XLF']
+        xlf = self.securities['XLK']
         xlf_ask = xlf.get_buy()
         xlf_sell = xlf.get_sell()
 
@@ -38,11 +38,11 @@ class ETFArbitrage(Algo):
                 self.positions['AAPL'] >= 2 and \
                 self.positions['MSFT'] >= 3 and \
                 self.positions['GOOG'] >= 2:
-                trades.append(('XLF', 'BUY', 10))
+                trades.append(('XLK', 'BUY', 10))
 
         elif component_sells > xlf_ask + CONVERSION_FEE:
-            if self.positions['XLF'] >= 10:
-                trades.append(('XLF', 'SELL', 10))
+            if self.positions['XLK'] >= 10:
+                trades.append(('XLK', 'SELL', 10))
 
 
         return trades
