@@ -17,10 +17,10 @@ class Gateway:
         self.sock.send((formatted_data + '\n').encode('utf-8'))
 
     def read(self):
-        data = self.sock.recv(PACKET_SIZE).decode('utf-8')  # recv is blocking
+        data = self.sock.recv(PACKET_SIZE).decode('utf-8').split('\n')  # recv is blocking
         print(data)
         if data:
-            return json.loads(data)
+            return json.loads(data)  # list of objects
 
     def listen(self):
         while True:
