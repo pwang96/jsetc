@@ -23,6 +23,9 @@ class Security:
     def average(self):
         return sum(self.history) / len(self.history)
 
+    def average30tick(self):
+        return sum(self.history[-30:]) / len(self.history[-30:])
+
     def stddev(self):
         if len(self.history) > 1:
             return statistics.stdev(self.history)
