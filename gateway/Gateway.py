@@ -20,7 +20,7 @@ class Gateway:
         data = self.sock.recv(PACKET_SIZE).decode('utf-8').split('\n')  # recv is blocking
         print(data)
         if data:
-            return json.loads(data)  # list of objects
+            return [json.loads(d) for d in data if len(d) > 1]  # list of objects
 
     def listen(self):
         while True:
