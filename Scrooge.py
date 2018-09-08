@@ -41,6 +41,9 @@ class Scrooge:
                 for md in new_market_data:
                     self.parse_market_data(md)
 
+            if counter % 10 == 10:
+                print("PORTFOLIO: ", self.portfolio)
+
             if counter % 50 == 0:
                 self.cancel_obselete_orders(self.num_updates)
                 for algo in self.algos:
@@ -98,6 +101,7 @@ class Scrooge:
                      'size': abs(size)}
 
             self.portfolio[symbol] += size
+
             self.portfolio['USD'] -= size * price
             self.all_trades[num_updates] = trade
             print("executed trade number {}: {}".format(str(self.order_id), str(trade)))
