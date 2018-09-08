@@ -10,6 +10,6 @@ class Bond(Algo):
         sell = self.securities['BOND'].get_sell()
         buy = self.securities['BOND'].get_buy()
 
-        trades = [('BOND', buy + 0.01, 100), ('BOND', sell - 0.01, -100)]
+        trades = [('BOND', buy + 1, 100), ('BOND', sell - 1, -100)]
 
         return trades
