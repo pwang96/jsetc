@@ -38,7 +38,6 @@ class Security:
 
     def get_midprice(self):
         if self.history:
-            last_update = self.history[-1]
-            return (last_update.bid + last_update.ask) / 2
+            return self.history[-1]
         return 0
         
