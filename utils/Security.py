@@ -3,7 +3,7 @@ class Security:
         self.symbol = symbol
         self.members = members
 
-        self.buys = []
+        self.buys = []  # list of lists
         self.sells = []
         self.history = []
         self.last_update = None
@@ -11,7 +11,7 @@ class Security:
     def update(self, buys, sells):
         self.buys = buys
         self.sells = sells
-        self.history.append((buys[0] + sells[0])/2)  # record the midprice
+        self.history.append((buys[0][0] + sells[0][0]) /2)  # record the midprice
 
     def get_buy(self):
         if self.buys:
