@@ -22,11 +22,10 @@ class Scrooge:
         self.order_id = 0
         self.securities = [Security(sec, mem) for sec, mem in zip(SECURITIES, SEC_MEMBERS)]
         self.security_map = {sec.symbol: sec for sec in self.securities}
-        self.algos = [ETFArbitrage.ETFArbitrage(self.security_map, self.portfolio),
-                      Bond.Bond(self.security_map, self.portfolio),
+        self.algos = [Bond.Bond(self.security_map, self.portfolio),
                       MarketMaking.MarketMaking(self.security_map, self.portfolio),
                       ADR.ADR(self.security_map, self.portfolio)]
-
+        self.etf_arb = ETFArbitrage.ETFArbitrage(self.security_map, self.portfolio)
         self.num_updates = 0
         self.all_trades = {}
 
@@ -46,6 +45,9 @@ class Scrooge:
 
             if counter % 50 == 0:
                 self.cancel_obselete_orders(self.num_updates)
+                conversions = self.etf_arb.find_trades()
+                for symbol, dir, size in conversions:
+                    self.execute_convert(symbol, dir, size)
                 for algo in self.algos:
                     algo.update_market_data(self.security_map, self.portfolio)
                     new_trades = algo.find_trades()
@@ -55,8 +57,8 @@ class Scrooge:
                                 if size > 0:
                                     continue
 
-                            print('type of price, ', type(price))
-                            print('type of size, ', type(size))
+                            # print('type of price, ', type(price))
+                            # print('type of size, ', type(size))
                             self.execute_single_trade(symbol, price, size, self.num_updates)
 
     def parse_market_data(self, market_data):
